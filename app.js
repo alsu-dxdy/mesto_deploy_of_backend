@@ -62,7 +62,7 @@ app.listen(PORT, () => {
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  const status = err.status || 500;
+  const status = err.statusCode || 500;
   let { message } = err;
 
   if (err.message.includes('password') && err.message.includes('pattern')) {

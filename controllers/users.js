@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const jwt = require('jsonwebtoken');
+const NotFoundError = require('../errors/NotFoundError');
+const AuthorizationError = require('../errors/AuthorizationError');
 
 // const { NODE_ENV, JWT_SECRET } = process.env;
 const { JWT_SECRET } = require('../config');
@@ -7,10 +9,12 @@ const { JWT_SECRET } = require('../config');
 // импортируем модель
 const User = require('../models/user');
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ users }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      next(err);
+    });
 };
 
 module.exports.getUserById = (req, res, next) => {
@@ -18,7 +22,7 @@ module.exports.getUserById = (req, res, next) => {
     // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
-        return next({ status: 404, message: 'User with this ID does not exist' });
+        throw new NotFoundError(`User with ID ${req.params.userId} does not exist`);
       }
       res.json(user);
     })
@@ -49,7 +53,7 @@ module.exports.createUser = (req, res, next) => {
     // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.message === 'ENOTFOUND') {
-        return next({ status: 404, message: 'User file not found' });
+        throw new NotFoundError('User file not found');
       }
       next(err);
     });
@@ -60,7 +64,7 @@ module.exports.removeUserdById = (req, res, next) => {
     // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
-        return next({ status: 404, message: 'User with this ID does not exist' });
+        throw new NotFoundError(`User with ID ${req.params.userId} does not exist`);
       }
       res.send('User is deleted');
     })
@@ -69,7 +73,7 @@ module.exports.removeUserdById = (req, res, next) => {
     });
 };
 
-module.exports.updateUser = (req, res) => {
+module.exports.updateUser = (req, res, next) => {
   // eslint-disable-next-line max-len
   User.findByIdAndUpdate(
     req.user._id,
@@ -80,10 +84,12 @@ module.exports.updateUser = (req, res) => {
     },
   )
     .then((updatedUser) => res.send({ data: updatedUser }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      next(err);
+    });
 };
 
-module.exports.updateAvatarUser = (req, res) => {
+module.exports.updateAvatarUser = (req, res, next) => {
   // eslint-disable-next-line max-len
   User.findByIdAndUpdate(
     req.user._id,
@@ -94,7 +100,9 @@ module.exports.updateAvatarUser = (req, res) => {
     },
   )
     .then((updatedAvatarUser) => res.send({ data: updatedAvatarUser }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      next(err);
+    });
 };
 
 module.exports.login = (req, res) => {
@@ -104,17 +112,16 @@ module.exports.login = (req, res) => {
     .then((newUser) => {
       // не нашелся - отклоняем промис
       if (!newUser) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+        throw new AuthorizationError('Неправильные почта или пароль');
       }
       // нашелся - сравниваем хеши
       return bcrypt.compare(password, newUser.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Error('Неправильные почта или пароль'));
+            throw new AuthorizationError('Неправильные почта или пароль');
           }
           const token = jwt.sign(
             { _id: newUser._id },
-            // NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
             JWT_SECRET,
             { expiresIn: '7d' },
           );
