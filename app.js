@@ -8,10 +8,14 @@ const rateLimit = require('express-rate-limit');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
+const { celebrate } = require('celebrate');
+const { errors } = require('celebrate');
+
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
-const schema = require('./schemas/signup');
-const { validate } = require('./schemas/signup'); // for joi
+const { signInSchema } = require('./schemas/signin');
+const { signUpSchema } = require('./schemas/signup'); // for joi
+
 const { PORT, DATABASE_URL } = require('./config');
 
 const app = express();
@@ -41,9 +45,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/signin', login);
-app.post('/signup', validate(schema), createUser);
+// app.post('/signin', login);
+// app.post('/signup', createUser);
 
+app.post('/signup', celebrate(signUpSchema), createUser);
+app.post('/signin', celebrate(signInSchema), login);
 
 // авторизация
 app.use(auth);
@@ -59,6 +65,9 @@ app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`App listening on port ${PORT}`);
 });
+
+// обработчики ошибок
+app.use(errors()); // обработчик ошибок celebrate
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {

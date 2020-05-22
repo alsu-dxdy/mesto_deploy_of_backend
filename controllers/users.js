@@ -36,12 +36,6 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  if (password.length < 8) {
-    return next({
-      status: 400,
-      message: 'minlength of password must be 8',
-    });
-  }
   // хешируем пароль
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
