@@ -13,8 +13,8 @@ const { errors } = require('celebrate');
 
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
-const { signInSchema } = require('./schemas/signin');
-const { signUpSchema } = require('./schemas/signup'); // for joi
+const { signInSchema } = require('./schemas/signin');// for joi
+const { signUpSchema } = require('./schemas/signup');
 
 const { PORT, DATABASE_URL } = require('./config');
 
@@ -45,8 +45,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.post('/signin', login);
-// app.post('/signup', createUser);
 
 app.post('/signup', celebrate(signUpSchema), createUser);
 app.post('/signin', celebrate(signInSchema), login);
