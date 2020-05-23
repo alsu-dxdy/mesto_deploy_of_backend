@@ -1,6 +1,6 @@
 #### mesto_deploy_of_backend
-##### http://placeimage.space/
-##### http://84.201.175.135/
+##### http://placeimage.space
+##### http://84.201.175.135
 
 Version v0.0.2
 Description: mesto_deploy_of_backend
