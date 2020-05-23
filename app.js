@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { celebrate } = require('celebrate');
 const { errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
@@ -45,6 +46,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(requestLogger); // подключаем логгер запросов
 
 app.post('/signup', celebrate(signUpSchema), createUser);
 app.post('/signin', celebrate(signInSchema), login);
@@ -65,8 +67,10 @@ app.listen(PORT, () => {
 });
 
 // обработчики ошибок
+app.use(errorLogger); // подключаем логгер ошибок
 app.use(errors()); // обработчик ошибок celebrate
 
+// централизованный обработчик ошибок
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   const status = err.statusCode || 500;
