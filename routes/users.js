@@ -3,7 +3,7 @@ const { celebrate } = require('celebrate');
 
 // eslint-disable-next-line object-curly-newline
 const { getUsers, getUserById, removeUserdById, updateUser, updateAvatarUser } = require('../controllers/users');
-const { userIdSchema } = require('../schemas/cardId');
+const { userIdSchema } = require('../schemas/userId');
 
 
 router.get('/', getUsers);
