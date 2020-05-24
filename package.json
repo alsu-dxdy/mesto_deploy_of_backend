@@ -1,7 +1,7 @@
 {
-  "name": "mesto_server_with_db_jwt",
+  "name": "mesto_deploy_of_backend",
   "version": "0.0.2",
-  "description": "creating server with db and authentication",
+  "description": "mesto_deploy_of_backend",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alsu-dxdy/mesto_server_with_db_jwt.git"
+    "url": "git+https://github.com/alsu-dxdy/mesto_deploy_of_backend"
   },
   "author": "Alsu A",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/alsu-dxdy/mesto_server_with_db_jwt/issues"
+    "url": "https://github.com/alsu-dxdy/mesto_deploy_of_backend/issues"
   },
-  "homepage": "https://github.com/alsu-dxdy/mesto_server_with_db_jwt#readme",
+  "homepage": "https://github.com/alsu-dxdy/mesto_deploy_of_backend#readme",
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
