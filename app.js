@@ -2,7 +2,6 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable consistent-return */
 require('dotenv').config();
-const path = require('path');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const bodyParser = require('body-parser');
@@ -43,8 +42,6 @@ mongoose.connect(DATABASE_URL, {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(requestLogger); // подключаем логгер запросов
 
