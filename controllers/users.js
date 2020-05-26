@@ -46,9 +46,6 @@ module.exports.createUser = (req, res, next) => {
     })
     // eslint-disable-next-line consistent-return
     .catch((err) => {
-      if (err.message === 'ENOTFOUND') {
-        throw new NotFoundError('User file not found');
-      }
       next(err);
     });
 };

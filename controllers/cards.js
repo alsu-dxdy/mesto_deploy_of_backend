@@ -33,9 +33,6 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => res.send({ card }))
     // eslint-disable-next-line consistent-return
     .catch((err) => {
-      if (err.message === 'ENOTFOUND') {
-        throw new NotFoundError(`Card with ID ${req.params.cardId} does not exist`);
-      }
       next(err);
     });
 };
