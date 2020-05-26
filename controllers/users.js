@@ -19,16 +19,13 @@ module.exports.getUsers = (req, res, next) => {
 
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
-    // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!user) {
         throw new NotFoundError(`User with ID ${req.params.userId} does not exist`);
       }
       res.json(user);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 // eslint-disable-next-line consistent-return
@@ -44,10 +41,7 @@ module.exports.createUser = (req, res, next) => {
     .then((user) => {
       res.status(201).send({ _id: user._id, email: user.email });
     })
-    // eslint-disable-next-line consistent-return
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 

@@ -13,16 +13,13 @@ module.exports.getCards = (req, res, next) => {
 
 module.exports.getCardById = (req, res, next) => {
   Card.findById(req.params.cardId)
-    // eslint-disable-next-line consistent-return
     .then((card) => {
       if (!card) {
         throw new NotFoundError(`Card with ID ${req.params.cardId} does not exist`);
       }
       res.json(card);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
@@ -31,10 +28,7 @@ module.exports.createCard = (req, res, next) => {
 
   Card.create({ name, link, owner })
     .then((card) => res.send({ card }))
-    // eslint-disable-next-line consistent-return
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.removeCardById = (req, res, next) => {
