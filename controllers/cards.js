@@ -76,7 +76,13 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
-    .then((like) => res.send({ data: like }))
+    .then((like) => {
+      if (like) {
+        res.send({ data: like });
+      } else {
+        throw new NotFoundError(`Card with ID ${req.params.cardId} does not exist`);
+      }
+    })
     .catch((err) => {
       next(err);
     });
@@ -89,7 +95,13 @@ module.exports.dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
-    .then((like) => res.send({ data: like }))
+    .then((like) => {
+      if (like) {
+        res.send({ data: like });
+      } else {
+        throw new NotFoundError(`Card with ID ${req.params.cardId} does not exist`);
+      }
+    })
     .catch((err) => {
       next(err);
     });
