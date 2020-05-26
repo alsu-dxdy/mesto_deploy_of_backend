@@ -59,7 +59,7 @@ module.exports.removeCardById = (req, res, next) => {
       throw new ForbiddenError('You are not owner of this card, therefore you can not delete this card');
     })
     .then(() => {
-      res.send(`Card with ID ${req.params.cardId} is deleted`);
+      res.send({ data: `Card with ID ${req.params.cardId} is deleted` });
     })
     .catch((err) => {
       next(err);
