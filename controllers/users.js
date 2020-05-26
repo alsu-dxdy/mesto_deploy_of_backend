@@ -50,19 +50,6 @@ module.exports.createUser = (req, res, next) => {
     });
 };
 
-module.exports.removeUserdById = (req, res, next) => {
-  User.findByIdAndRemove(req.params.userId)
-    // eslint-disable-next-line consistent-return
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError(`User with ID ${req.params.userId} does not exist`);
-      }
-      res.send('User is deleted');
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
 
 module.exports.updateUser = (req, res, next) => {
   // eslint-disable-next-line max-len
