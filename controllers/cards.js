@@ -18,9 +18,14 @@ module.exports.getCardById = (req, res, next) => {
       throw new NotFoundError(`Card with ID ${req.params.cardId} does not exist`);
     })
     .then((card) => {
-      res.json(card);
+      req.card = card;
+      next();
     })
     .catch(next);
+};
+
+module.exports.sendOneCard = (req, res) => {
+  res.json(req.card);
 };
 
 module.exports.createCard = (req, res, next) => {
@@ -32,34 +37,20 @@ module.exports.createCard = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.removeCardById = (req, res, next) => {
-  Card
-    .findById(req.params.cardId)
-    .then((card) => {
-      if (!card) {
-        // если карта не нашлась
-        // eslint-disable-next-line prefer-promise-reject-errors
-        throw new NotFoundError(`Card with ID ${req.params.cardId} does not exist`);
-      }
-      const { owner } = card;
-      return owner;
-    })
-    .then((owner) => {
-      if (req.user._id === owner.toString()) {
-        return Card.findByIdAndRemove(req.params.cardId);
-      }
-      // если владельцы не совпали
-      // eslint-disable-next-line prefer-promise-reject-errors
-
+module.exports.
+ = (req, res, next) => {
+    // если владельцы не совпали
+    if (req.user._id !== req.card.owner.toString()) {
       throw new ForbiddenError('You are not owner of this card, therefore you can not delete this card');
-    })
-    .then(() => {
-      res.send({ data: `Card with ID ${req.params.cardId} is deleted` });
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
+    }
+    Card.remove({ _id: req.params.cardId })
+      .then(() => {
+        res.send({ data: `Card with ID ${req.params.cardId} is deleted` });
+      })
+      .catch((err) => {
+        next(err);
+      });
+  };
 
 // eslint-disable-next-line no-unused-vars
 module.exports.likeCard = (req, res, next) => {
