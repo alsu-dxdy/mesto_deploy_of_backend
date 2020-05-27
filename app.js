@@ -80,13 +80,17 @@ app.use((err, req, res, next) => {
   let { message } = err;
 
   if (err.message.includes('password') && err.message.includes('pattern')) {
-    message = 'Password must include symbols only from range: [a-zA-Z0-9]';
+    message = 'Password must include symbols only from range: [a-zA-Z0-9] and spec symbols';
+    return res.status(400).send({ message });
+  }
+
+  if (err.message.includes('email') && err.message.includes('unique')) {
+    message = 'User with email already exists';
     return res.status(400).send({ message });
   }
 
   if (err.name === 'ValidationError') {
-    message = 'ValidationError';
-    // message = err.details[0].message;
+    message = 'Incorrect email or password';
     return res.status(400).send({ message });
   }
 
