@@ -6,9 +6,7 @@ const ForbiddenError = require('../errors/ForbiddenError');
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send({ cards }))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.getCardById = (req, res, next) => {
@@ -46,9 +44,7 @@ module.exports.removeCardById = (req, res, next) => {
     .then(() => {
       res.send({ data: `Card with ID ${req.params.cardId} is deleted` });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 // eslint-disable-next-line no-unused-vars
@@ -59,9 +55,7 @@ module.exports.likeCard = (req, res, next) => {
     { new: true },
   )
     .then((like) => res.send({ data: like }))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 // eslint-disable-next-line no-unused-vars
@@ -72,7 +66,5 @@ module.exports.dislikeCard = (req, res, next) => {
     { new: true },
   )
     .then((like) => res.send({ data: like }))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };

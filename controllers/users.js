@@ -12,9 +12,7 @@ const User = require('../models/user');
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ users }))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.getUserById = (req, res, next) => {
@@ -57,9 +55,7 @@ module.exports.updateUser = (req, res, next) => {
     },
   )
     .then((updatedUser) => res.send({ data: updatedUser }))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.updateAvatarUser = (req, res, next) => {
@@ -73,9 +69,7 @@ module.exports.updateAvatarUser = (req, res, next) => {
     },
   )
     .then((updatedAvatarUser) => res.send({ data: updatedAvatarUser }))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.login = (req, res) => {
