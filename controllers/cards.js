@@ -37,20 +37,19 @@ module.exports.createCard = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.
- = (req, res, next) => {
-    // если владельцы не совпали
-    if (req.user._id !== req.card.owner.toString()) {
-      throw new ForbiddenError('You are not owner of this card, therefore you can not delete this card');
-    }
-    Card.remove({ _id: req.params.cardId })
-      .then(() => {
-        res.send({ data: `Card with ID ${req.params.cardId} is deleted` });
-      })
-      .catch((err) => {
-        next(err);
-      });
-  };
+module.exports.removeCardById = (req, res, next) => {
+  // если владельцы не совпали
+  if (req.user._id !== req.card.owner.toString()) {
+    throw new ForbiddenError('You are not owner of this card, therefore you can not delete this card');
+  }
+  Card.remove({ _id: req.params.cardId })
+    .then(() => {
+      res.send({ data: `Card with ID ${req.params.cardId} is deleted` });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 
 // eslint-disable-next-line no-unused-vars
 module.exports.likeCard = (req, res, next) => {
@@ -59,13 +58,7 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
-    .then((like) => {
-      if (like) {
-        res.send({ data: like });
-      } else {
-        throw new NotFoundError(`Card with ID ${req.params.cardId} does not exist`);
-      }
-    })
+    .then((like) => res.send({ data: like }))
     .catch((err) => {
       next(err);
     });
@@ -78,13 +71,7 @@ module.exports.dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
-    .then((like) => {
-      if (like) {
-        res.send({ data: like });
-      } else {
-        throw new NotFoundError(`Card with ID ${req.params.cardId} does not exist`);
-      }
-    })
+    .then((like) => res.send({ data: like }))
     .catch((err) => {
       next(err);
     });
