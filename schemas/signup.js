@@ -12,6 +12,6 @@ module.exports.signUpSchema = {
       .min(8)
       .required()
       // eslint-disable-next-line no-useless-escape
-      .regex(/^[-!@#%a-zA-Z0-9_{}\]\[\\\^\$\.\|\?\*\+\(\)]{3,30}$/), // экранирую спец символы
+      .regex(/^[-!@#%a-zA-Z0-9_{}\]\[\\\^\$\.\|\?\*\+\(\)]{8,30}$/), // экранирую спец символы
   }),
 };
