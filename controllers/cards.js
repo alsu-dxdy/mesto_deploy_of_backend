@@ -12,11 +12,12 @@ module.exports.getCards = (req, res, next) => {
 };
 
 module.exports.getCardById = (req, res, next) => {
-  Card.findById(req.params.cardId)
+  Card
+    .findById(req.params.cardId)
+    .orFail(() => {
+      throw new NotFoundError(`Card with ID ${req.params.cardId} does not exist`);
+    })
     .then((card) => {
-      if (!card) {
-        throw new NotFoundError(`Card with ID ${req.params.cardId} does not exist`);
-      }
       res.json(card);
     })
     .catch(next);

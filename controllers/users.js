@@ -18,11 +18,12 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUserById = (req, res, next) => {
-  User.findById(req.params.userId)
+  User
+    .findById(req.params.userId)
+    .orFail(() => {
+      throw new NotFoundError(`User with ID ${req.params.userId} does not exist`);
+    })
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError(`User with ID ${req.params.userId} does not exist`);
-      }
       res.json(user);
     })
     .catch(next);
