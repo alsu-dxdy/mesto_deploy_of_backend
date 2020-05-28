@@ -76,22 +76,21 @@ app.use(errors()); // обработчик ошибок celebrate
 // централизованный обработчик ошибок
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  const status = err.statusCode || 500;
+  let status = err.statusCode || 500;
   let { message } = err;
-
-  if (err.message.includes('password') && err.message.includes('pattern')) {
-    message = 'Password must include symbols only from range: [a-zA-Z0-9] and spec symbols';
-    return res.status(400).send({ message });
+  if (err.name === 'ValidationError') {
+    message = 'ValidationError';
+    status = 400;
   }
 
   if (err.message.includes('email') && err.message.includes('unique')) {
     message = 'User with email already exists';
-    return res.status(400).send({ message });
+    status = 400;
   }
 
-  if (err.name === 'ValidationError') {
-    message = 'Incorrect email or password';
-    return res.status(400).send({ message });
+  if (err.message.includes('password') && err.message.includes('pattern')) {
+    message = 'Password must include symbols only from range: [a-zA-Z0-9] and spec symbols';
+    status = 400;
   }
 
   if (status === 500) {
