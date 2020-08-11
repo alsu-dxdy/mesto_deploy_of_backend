@@ -6,6 +6,7 @@ module.exports.signInSchema = {
     password: Joi.string()
       .min(8)
       .required()
-      .regex(/^[a-zA-Z0-9]{3,30}$/),
+      // eslint-disable-next-line no-useless-escape
+      .regex(/^[-!@#%a-zA-Z0-9_{}\]\[\\\^\$\.\|\?\*\+\(\)]{3,30}$/), // экранирую спец символы
   }),
 };

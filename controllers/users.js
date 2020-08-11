@@ -12,23 +12,19 @@ const User = require('../models/user');
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ users }))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.getUserById = (req, res, next) => {
-  User.findById(req.params.userId)
-    // eslint-disable-next-line consistent-return
+  User
+    .findById(req.params.userId)
+    .orFail(() => {
+      throw new NotFoundError(`User with ID ${req.params.userId} does not exist`);
+    })
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError(`User with ID ${req.params.userId} does not exist`);
-      }
       res.json(user);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 // eslint-disable-next-line consistent-return
@@ -44,28 +40,9 @@ module.exports.createUser = (req, res, next) => {
     .then((user) => {
       res.status(201).send({ _id: user._id, email: user.email });
     })
-    // eslint-disable-next-line consistent-return
-    .catch((err) => {
-      if (err.message === 'ENOTFOUND') {
-        throw new NotFoundError('User file not found');
-      }
-      next(err);
-    });
+    .catch(next);
 };
 
-module.exports.removeUserdById = (req, res, next) => {
-  User.findByIdAndRemove(req.params.userId)
-    // eslint-disable-next-line consistent-return
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError(`User with ID ${req.params.userId} does not exist`);
-      }
-      res.send('User is deleted');
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
 
 module.exports.updateUser = (req, res, next) => {
   // eslint-disable-next-line max-len
@@ -78,9 +55,7 @@ module.exports.updateUser = (req, res, next) => {
     },
   )
     .then((updatedUser) => res.send({ data: updatedUser }))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.updateAvatarUser = (req, res, next) => {
@@ -94,9 +69,7 @@ module.exports.updateAvatarUser = (req, res, next) => {
     },
   )
     .then((updatedAvatarUser) => res.send({ data: updatedAvatarUser }))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.login = (req, res) => {
