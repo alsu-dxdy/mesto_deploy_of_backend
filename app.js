@@ -3,6 +3,7 @@
 /* eslint-disable consistent-return */
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -25,6 +26,27 @@ const limiter = rateLimit({
   max: 100, // можно совершить максимум 100 запросов с одного IP
 });
 
+const whitelist = [
+  'http://localhost:8080',
+  'https://alsu-dxdy.github.io',
+  'https://www.placeimage.space',
+  'http://www.placeimage.space',
+  'https://placeimage.space',
+  'http://placeimage.space',
+];
+
+const corsOptions = {
+  origin(origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // для передачи заголовка Access-Control-Allow-credentials
+};
+
+app.use(cors(corsOptions));
 
 // подключаем helmet
 app.use(helmet());
