@@ -1,6 +1,6 @@
 module.exports = {
   // eslint-disable-next-line radix
-  PORT: parseInt(process.env.PORT) || 3000,
+  PORT: parseInt(process.env.PORT) || 4000,
   DATABASE_URL: 'mongodb://localhost:27017/mestodb',
 
   // eslint-disable-next-line radix
